@@ -1,9 +1,10 @@
 from tabulate import tabulate
 
 daftarBuku = {
-    'Dilan 1927' : [1, 'N001', 'Dilan 1927', 'Susanto', 'Novel', 15],
-    'Boruto' : [2, 'K001', 'Boruto', 'Masashi Kisimoto', 'Komik', 2],
-    'FIFA Rules and Regulations' : [3, 'S001', 'FIFA Rules and Regulations', 'FIFA', 'Olahraga', 1]
+    'Dilan 1990' : [1, 101, 'Dilan 1990', 'Pidi Baiq', 'Novel', 2014, 15],
+    'Boruto' : [2, 201, 'Boruto', 'Ukyo Kodachi & Masashi Kisimoto', 'Komik', 2016, 2],
+    'FIFA Rules and Regulations' : [3, 301, 'FIFA Rules and Regulations', 'FIFA', 'Olahraga', 2023, 1],
+    'Jujutsu Kaisen' : [4, 202, 'Jujutsu Kaisen', 'Gege Akutami', 'Komik', 2023, 1],
 }
 
 def validasiStr(title):
@@ -34,8 +35,9 @@ def subMenuTampilkan():
         Tampilkan Data Buku
 
         1. Tampilkan Seluruh Buku
-        2. Tampilkan Beberapa Buku
-        3. Kembali Ke Menu Awal
+        2. Cari Buku Berdasarkan ID
+        3. Cari Buku Berdasarkan Kategori
+        4. Kembali Ke Menu Awal
               ''')
 
         pilMenu = validasiInt(title="Masukkan angka sesuai menu: ")
@@ -43,7 +45,7 @@ def subMenuTampilkan():
         if pilMenu == 1:
             tampilkanBuku(daftarBuku)
         elif pilMenu == 2:
-            pencarianBuku(daftarBuku)
+            pencarianBukuId(daftarBuku)
         elif pilMenu == 3:
             break
         else:
@@ -61,7 +63,7 @@ def subMenuTambahkan():
         pilMenu = validasiInt(title="Masukkan Angka Sesuai Menu: ")
 
         if pilMenu == 1:
-            tambahBuku()
+            checkBuku()
         elif pilMenu == 2:
             break
         else:
@@ -70,7 +72,7 @@ def subMenuTambahkan():
 def subMenuHapus():
     while True:
         print('''
-        Tambahkan Buku
+        Hapus Buku
 
         1. Hapus Data Buku
         2. Kembali Ke Menu Awal
@@ -85,11 +87,29 @@ def subMenuHapus():
         else:
             print('Input anda salah. Silahkan input ulang!')
 
-def tampilkanBuku(database ,header=['No', 'ID Buku', 'Judul', 'Author', 'Kategori', 'Jumlah']):
+def subMenuUpdate():
+    while True:
+        print('''
+        Update Data Buku
+
+        1. Update Data Buku
+        2. Kembali Ke Menu Awal
+              ''')
+
+        pilMenu = validasiInt(title="Masukkan Angka Sesuai Menu: ")
+
+        if pilMenu == 1:
+            updateBuku()
+        elif pilMenu == 2:
+            break
+        else:
+            print('Input anda salah. Silahkan input ulang!')
+
+def tampilkanBuku(database ,header=['No', 'ID Buku', 'Judul', 'Pengarang', 'Kategori', 'Tahun Terbit', 'Jumlah']):
     print(tabulate(database.values(), headers=header, tablefmt='grid'))
 
-def pencarianBuku(idBuku):
-    idBuku = input('Masukkan ID Buku Yang Ingin Dicari: ').upper()
+def pencarianBukuId(idBuku):
+    idBuku = validasiInt(title='Masukkan ID Buku Yang Ingin Dicari: ')
     dataBuku = {}
     for key, val in daftarBuku.items():
         if idBuku == val[1]:
@@ -101,77 +121,137 @@ def pencarianBuku(idBuku):
     else:
         print('Buku Yang Anda Cari Tidak ada')
 
+def checkBuku():
+    idBuku = validasiInt(title='Masukkan ID Buku: ')
+    status = False
+    for buku in daftarBuku.values():
+        if buku[1] == idBuku:
+            status = True
+            break
+    if status:
+        print(f"Buku dengan ID {idBuku} sudah ada. Silakan periksa kembali.")
+    else:
+        judul = input('Masukkan Judul Buku: ')
+        pengarang = validasiStr(title='Masukkan Pengarang Buku: ')
+        kategori = validasiStr(title='Masukkan Kategori Buku: ')
+        tahunTerbit = validasiInt(title='Masukkan Tahun Terbit Buku: ', minval=0)
+        jumlah = validasiInt(title='Masukkan Jumlah Buku: ', minval=0)
+        while True:
+            validasi = validasiStr('Apakah Data Yang Anda Masukkan Sudah Sesuai (Y/N): ').lower()
+            if validasi in ['yes', 'y', 'ya']:
+                noBaru = len(daftarBuku) + 1
+                daftarBuku[judul] = [noBaru, idBuku, judul, pengarang, kategori, tahunTerbit, jumlah]
+                print('Buku Berhasil Ditambahkan!')
+                tampilkanBuku(daftarBuku)
+                break
+            elif validasi in ['no', 'n', 'tidak']:
+                tambahBuku()
+            else: print('Inputan Anda Tidak Sesuai')
+
 def tambahBuku():
-    id = input('Masukkan ID Buku: ').upper()
     judul = input('Masukkan Judul Buku: ')
-    author = input('Masukkan Pengarang Buku: ')
-    kategori = input('Masukkan Kategori Buku: ')
+    pengarang = validasiStr(title='Masukkan Pengarang Buku: ')
+    kategori = validasiStr(title='Masukkan Kategori Buku: ')
+    tahunTerbit = validasiInt(title='Masukkan Tahun Terbit Buku: ', minval=0)
     jumlah = validasiInt(title='Masukkan Jumlah Buku: ', minval=0)
+    while True:
+        validasi = validasiStr('Apakah Data Yang Anda Masukkan Sudah Sesuai (Y/N): ').lower()
+        if validasi in ['yes', 'y', 'ya']:
+            noBaru = len(daftarBuku) + 1
+            daftarBuku[judul] = [noBaru, idBuku, judul, pengarang, kategori, tahunTerbit, jumlah]
+            print('Buku Berhasil Ditambahkan!')
+            tampilkanBuku(daftarBuku)
+            break
+        elif validasi in ['no', 'n', 'tidak']:
+            tambahBuku()
+        else: print('Inputan Anda Tidak Sesuai')
 
-    # Check if ID already exists
-    if id in buku in daftarBuku.values():
-        print(f'Buku dengan ID {id} sudah ada. Silakan periksa kembali.')
-        return
-
-    # Menambahkan data ke database
+def updateBuku():
+    idBuku = validasiInt(title='Masukkan ID Buku yang ingin diupdate: ')
     for key, buku in daftarBuku.items():
-        if id in buku:
-            buku[2] = judul  # Update title
-            buku[3] = author  # Update author
-            buku[4] = kategori  # Update category
-            buku[5] = jumlah  # Update quantity
-            print('Buku Berhasil Diupdate!')
-            break
-    else:
-        noBaru = len(daftarBuku) + 1
-        daftarBuku[judul] = [noBaru, id, judul, author, kategori, jumlah]
-        print('Buku Berhasil Ditambahkan!')
+        if buku[1] == idBuku:
+            while True:
+                print('''
+                Pilih kolom yang ingin diupdate:
+                1. Judul Buku
+                2. Pengarang Buku
+                3. Kategori Buku
+                4. Tahun Terbit Buku
+                5. Jumlah Buku
+                6. Selesai
+                ''')
+                pilihan = validasiInt("Masukkan pilihan (1-6): ")
+                
+                if pilihan == 1:
+                    judulBaru = validasiStr('Masukkan Judul Buku baru: ')
+                    validasi = input('Apakah Yakin Untuk Menyimpan Data Baru? (Y/N): ').lower()
+                    if validasi in ['yes', 'y', 'ya']:
+                        buku[2] = judulBaru
+                        print('Perubahan Data Berhasil Disimpan')
+                        tampilkanBuku(daftarBuku)
+                    elif validasi in ['no', 'n', 'tidak']:
+                        print('Perubahan Data Batal Disimpan')
+                    else:
+                        print('Input Tidak Sesuai')
+                        
+                elif pilihan == 2:
+                    pengarangBaru = validasiStr('Masukkan Pengarang Buku baru: ')
+                    validasi = input('Apakah Yakin Untuk Menyimpan Data Baru? (Y/N): ').lower()
+                    if validasi in ['yes', 'y', 'ya']:
+                        buku[3] = pengarangBaru
+                        print('Perubahan Data Berhasil Disimpan')
+                        tampilkanBuku(daftarBuku)
+                    elif validasi in ['no', 'n', 'tidak']:
+                        print('Perubahan Data Batal Disimpan')
+                    else:
+                        print('Input Tidak Sesuai')
 
-    # Menampilkan database
-    tampilkanBuku(daftarBuku)
+                elif pilihan == 3:
+                    kategoriBaru = validasiStr('Masukkan Kategori Buku baru: ')
+                    validasi = input('Apakah Yakin Untuk Menyimpan Data Baru? (Y/N): ').lower()
+                    if validasi in ['yes', 'y', 'ya']:
+                        buku[4] = kategoriBaru
+                        print('Perubahan Data Berhasil Disimpan')
+                        tampilkanBuku(daftarBuku)
+                    elif validasi in ['no', 'n', 'tidak']:
+                        print('Perubahan Data Batal Disimpan')
+                    else:
+                        print('Input Tidak Sesuai')
 
-def tambahBuku():
-    id = input('Masukkan ID Buku: ').upper()
-    judul = input('Masukkan Judul Buku: ')
-    author = input('Masukkan Pengarang Buku: ')
-    kategori = input('Masukkan Kategori Buku: ')
-    jumlah = validasiInt(title='Masukkan Jumlah Buku: ', minval=0)
+                elif pilihan == 4:
+                    tahunBaru = validasiInt('Masukkan Tahun Terbit Buku baru: ', minval=0)
+                    validasi = input('Apakah Yakin Untuk Menyimpan Data Baru? (Y/N): ').lower()
+                    if validasi in ['yes', 'y', 'ya']:
+                        buku[5] = tahunBaru
+                        print('Perubahan Data Berhasil Disimpan')
+                        tampilkanBuku(daftarBuku)
+                    elif validasi in ['no', 'n', 'tidak']:
+                        print('Perubahan Data Batal Disimpan')
+                    else:
+                        print('Input Tidak Sesuai')
 
-    # Menambahkan data ke database
-    for buku in daftarBuku.items():
-        if id in buku:
-            buku[2] = judul  # Update title
-            buku[3] = author  # Update author
-            buku[4] = kategori  # Update category
-            buku[5] = jumlah  # Update quantity
-            print('Buku Berhasil Diupdate!')
-            break
-    else:
-        noBaru = len(daftarBuku) + 1
-        daftarBuku[judul] = [noBaru, id, judul, author, kategori, jumlah]
-        print('Buku Berhasil Ditambahkan!')
-
-    # Menampilkan database
-    tampilkanBuku(daftarBuku)
-
-    # # Menambahkan data ke database
-    # for key, buku in daftarBuku.items():
-    #     if id in buku:
-    #         daftarBuku[key] = [id, judul, author, kategori, jumlah]
-    #         print('Buku Berhasil Diupdate!')
-    #         break
-    # else:
-    #     noBaru = len(daftarBuku) +1
-    #     daftarBuku[judul] = [noBaru, id, judul, author, kategori, jumlah]
-    #     print('Buku Berhasil Ditambahkan!')
-
-    # # Menampilkan database
-    # tampilkanBuku(daftarBuku)
+                elif pilihan == 5:
+                    jumlahBaru = validasiInt('Masukkan Jumlah Buku baru: ', minval=0)
+                    validasi = input('Apakah Yakin Untuk Menyimpan Data Baru? (Y/N): ').lower()
+                    if validasi in ['yes', 'y', 'ya']:
+                        buku[6] = jumlahBaru
+                        print('Perubahan Data Berhasil Disimpan')
+                        tampilkanBuku(daftarBuku)
+                    elif validasi in ['no', 'n', 'tidak']:
+                        print('Perubahan Data Batal Disimpan')
+                    else:
+                        print('Input Tidak Sesuai')
+                elif pilihan == 6:
+                    break
+                else:
+                    print("Pilihan tidak valid. Silakan coba lagi.")
+            return
+    print(f"Buku dengan ID {idBuku} tidak ditemukan.")
 
 def hapusBuku():
     tampilkanBuku(daftarBuku)
 
-    idBuku = input('Masukkan ID Buku Yang Ingin Dihapus: ').upper()
+    idBuku = validasiInt(title='Masukkan ID Buku: ')
 
     # Hapus Buku
     for key, val in daftarBuku.items():
@@ -181,6 +261,7 @@ def hapusBuku():
             break
         else:
             print(f'Buku dengan ID {idBuku} tidak ditemukan.')
+            break
    
     # Update urutan buku
     for index, (key, val) in enumerate(daftarBuku.items(), start=1):
@@ -188,25 +269,3 @@ def hapusBuku():
 
     # Display the updated book list
     tampilkanBuku(daftarBuku)
-
-# def hapusBuku():
-#     tampilkanBuku(daftarBuku)
-
-#     idBuku = input('Masukkan ID Buku Yang Ingin Dihapus: ').upper()
-
-#     for key, val in daftarBuku.copy().items():
-#         if idBuku == val[0]:
-#             del daftarBuku[key]
-#             break
-#     else:
-#         print('Buku Yang Anda Cari Tidak Ada')
-
-#     #Memperbarui urutan buku
-#     for key, val in enumerate(daftarBuku.values()):
-#         if key != val[0]:
-#             val[0]= key + 1
-#             print('Buku Berhasil Di Hapus')
-#             break
-
-#     # Menampilkan database
-#     tampilkanBuku(daftarBuku)
