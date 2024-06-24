@@ -187,23 +187,19 @@ def updateBuku():
                     
                     if pilihan == 1:
                         judulBaru = input('Masukkan Judul Buku baru: ').capitalize()
-                        status = False
-                        for buku in daftarBuku.values():
-                            if buku[2] == judulBaru:
-                                status = True
-                                break
-                        if status:
-                            print(f"Buku berjudul {judulBaru} sudah ada. Silakan periksa kembali.")
+                        # Validate if the new title already exists
+                        if any(buku[2] == judulBaru for buku in daftarBuku.values()):
+                            print(f"\nBuku berjudul {judulBaru} sudah ada. Silakan periksa kembali.\n")
                             break
                         else:
                             validasi = input('Apakah Yakin Untuk Menyimpan Data Baru? (Y/N): ').lower()
                             if validasi in ['yes', 'y', 'ya']:
                                 buku[2] = judulBaru
-                                print('Perubahan Data Berhasil Disimpan')
+                                print('Perubahan Judul Buku Berhasil Disimpan')
                                 tampilkanBuku(daftarBuku)
                                 break
                             elif validasi in ['no', 'n', 'tidak']:
-                                print('Perubahan Data Batal Disimpan')
+                                print('Perubahan Judul Buku Batal Disimpan')
                             else:
                                 print('Input Tidak Sesuai')
 
@@ -257,11 +253,12 @@ def updateBuku():
                         elif validasi in ['no', 'n', 'tidak']:
                             print('Perubahan Data Dibatalkan')
                         else:
-                            print('Input Tidak Sesuai')    
+                            print('Input Tidak Sesuai')
+
                     elif pilihan == 6:
                         judulBaru = input('Masukkan Judul Buku baru: ').capitalize()
                         if any(buku[2].lower() == judulBaru.lower() for buku in daftarBuku.values()):
-                            print(f"Buku berjudul {judulBaru} sudah ada. Silakan periksa kembali.")
+                            print(f"\nBuku berjudul {judulBaru} sudah ada. Silakan periksa kembali.\n")
                             return
                         pengarangBaru = input('Masukkan Pengarang Buku baru: ').capitalize()
                         kategoriBaru = input('Masukkan Kategori Buku baru: ').capitalize()
