@@ -237,16 +237,18 @@ def hapusBuku():
     # Hapus Buku
     for key, val in daftarBuku.items():
         if idBuku == val[1]:
-            del daftarBuku[key]
-            print(f'Buku dengan ID {idBuku} berhasil dihapus.')
-            break
+            validasi = validasiStr('Apakah Anda Setuju Akan Menambahkan Buku? (Y/N): ').lower()
+            if validasi in ['yes', 'y', 'ya']:
+                del daftarBuku[key]
+                for index, (key, val) in enumerate(daftarBuku.items(), start=1):
+                    val[0] = index
+                    print(f'Buku dengan ID {idBuku} berhasil dihapus.')
+                    tampilkanBuku(daftarBuku)
+                break
+            elif validasi in ['no', 'n', 'tidak']:
+                print(f'Buku Batal Dihapus.')
+                break
+            else: print('Inputan Anda Tidak Sesuai')
         else:
             print(f'Buku dengan ID {idBuku} tidak ditemukan.')
             break
-   
-    # Update urutan buku
-    for index, (key, val) in enumerate(daftarBuku.items(), start=1):
-        val[0] = index
-
-    # Display the updated book list
-    tampilkanBuku(daftarBuku)
