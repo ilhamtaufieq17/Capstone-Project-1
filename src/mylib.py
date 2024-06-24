@@ -7,15 +7,6 @@ daftarBuku = {
     'Jujutsu Kaisen' : [4, 202, 'Jujutsu Kaisen', 'Gege Akutami', 'Komik', 2023, 7],
 }
 
-def validasiStr(title):
-    while True:
-        teks = input(title)
-        if teks.isalpha() == True:
-            break
-        else:
-            print('Silahkan inputkan hanya teks')
-    return teks.capitalize()
-
 def validasiInt(title, minval=0, maxval=10000):
     while True:
         num = input(title)
@@ -105,20 +96,26 @@ def subMenuUpdate():
             print('Input anda salah. Silahkan input ulang!')
 
 def tampilkanBuku(database ,header=['No', 'ID Buku', 'Judul', 'Pengarang', 'Kategori', 'Tahun Terbit', 'Jumlah']):
-    print(tabulate(database.values(), headers=header, tablefmt='grid', stralign='center', numalign='center'))
+    if len(daftarBuku) == 0:
+        print('Tidak Ada Data Yang Ditampilkan')
+    else:
+        print(tabulate(database.values(), headers=header, tablefmt='grid', stralign='center', numalign='center'))
 
 def pencarianBukuId(idBuku):
-    idBuku = validasiInt(title='Masukkan ID Buku Yang Ingin Dicari: ')
-    dataBuku = {}
-    for key, val in daftarBuku.items():
-        if idBuku == val[1]:
-            valCopy = val[:]
-            valCopy[0] = 1
-            dataBuku.update({key: valCopy})
-            tampilkanBuku(dataBuku)
-            break
+    if len(daftarBuku) == 0:
+        print('Tidak Ada Data Yang Ditampilkan')
     else:
-        print('Buku Yang Anda Cari Tidak ada')
+        idBuku = validasiInt(title='Masukkan ID Buku Yang Ingin Dicari: ')
+        dataBuku = {}
+        for key, val in daftarBuku.items():
+            if idBuku == val[1]:
+                valCopy = val[:]
+                valCopy[0] = 1
+                dataBuku.update({key: valCopy})
+                tampilkanBuku(dataBuku)
+                break
+        else:
+            print('Buku Yang Anda Cari Tidak ada')
 
 def tambahBuku():
     idBuku = validasiInt(title='Masukkan ID Buku: ')
@@ -129,28 +126,39 @@ def tambahBuku():
             break
     if status:
         print(f"Buku dengan ID {idBuku} sudah ada. Silakan periksa kembali.")
-    else:
-        judul = input('Masukkan Judul Buku: ')
-        pengarang = input('Masukkan Pengarang Buku: ')
-        kategori = input('Masukkan Kategori Buku: ')
-        tahunTerbit = validasiInt(title='Masukkan Tahun Terbit Buku: ', minval=0)
-        jumlah = validasiInt(title='Masukkan Jumlah Buku: ', minval=0)
-        while True:
-            validasi = input('Apakah Anda Setuju Akan Menambahkan Buku? (Y/N): ').lower()
-            if validasi in ['yes', 'y', 'ya']:
-                noBaru = len(daftarBuku) + 1
-                daftarBuku[judul] = [noBaru, idBuku, judul, pengarang, kategori, tahunTerbit, jumlah]
-                print('Buku Berhasil Ditambahkan!')
-                tampilkanBuku(daftarBuku)
-                break
-            elif validasi in ['no', 'n', 'tidak']:
-                print('Buku Batal Ditambahkan!')
-                break
-            else: print('Inputan Anda Tidak Sesuai')
+        return
+
+    judul = input('Masukkan Judul Buku: ').capitalize()
+    pengarang = input('Masukkan Pengarang Buku: ').capitalize()
+    kategori = input('Masukkan Kategori Buku: ').capitalize()
+    tahunTerbit = validasiInt(title='Masukkan Tahun Terbit Buku: ', minval=0)
+    jumlah = validasiInt(title='Masukkan Jumlah Buku: ', minval=0)
+
+    status = False
+    for buku in daftarBuku.values():
+        if buku[2] == judul:
+            status = True
+            break
+    if status:
+        print(f"Buku dengan judul {judul} sudah ada. Silakan periksa kembali.")
+        return
+
+    while True:
+        validasi = input('Apakah Anda Setuju Akan Menambahkan Buku? (Y/N): ').lower()
+        if validasi in ['yes', 'y', 'ya']:
+            noBaru = len(daftarBuku) + 1
+            daftarBuku[noBaru] = [noBaru, idBuku, judul, pengarang, kategori, tahunTerbit, jumlah]
+            print('Buku Berhasil Ditambahkan!')
+            tampilkanBuku(daftarBuku)
+            break
+        elif validasi in ['no', 'n', 'tidak']:
+            print('Buku Batal Ditambahkan!')
+            break
+        else:
+            print('Inputan Anda Tidak Sesuai')
 
 def updateBuku():
-    idBuku = validasiInt(title='Masukkan ID Buku yang ingin diupdate: ')
-
+    idBuku = validasiInt(title='Masukkan ID Buku: ')
     for key, buku in daftarBuku.items():
         if buku[1] == idBuku:
             while True:
@@ -163,7 +171,7 @@ def updateBuku():
                         tampilkanBuku(dataBuku)
                         break
                     
-                validasi = validasiStr('Apakah Anda Setuju Akan Mengubah Data Buku? (Y/N): ').lower()
+                validasi = input('Apakah Anda Setuju Akan Mengubah Data Buku? (Y/N): ').lower()
                 if validasi in ['yes', 'y', 'ya']:
                     print('''
                     Pilih kolom yang ingin diupdate:
@@ -172,25 +180,35 @@ def updateBuku():
                     3. Kategori Buku
                     4. Tahun Terbit Buku
                     5. Jumlah Buku
-                    6. Kembali      
+                    6. Update Keseluruhan
+                    7. Kembali      
                     ''')
                     pilihan = validasiInt("Masukkan pilihan (1-6): ")
                     
                     if pilihan == 1:
-                        judulBaru = input('Masukkan Judul Buku baru: ')
-                        validasi = input('Apakah Yakin Untuk Menyimpan Data Baru? (Y/N): ').lower()
-                        if validasi in ['yes', 'y', 'ya']:
-                            buku[2] = judulBaru
-                            print('Perubahan Data Berhasil Disimpan')
-                            tampilkanBuku(daftarBuku)
+                        judulBaru = input('Masukkan Judul Buku baru: ').capitalize()
+                        status = False
+                        for buku in daftarBuku.values():
+                            if buku[2] == judulBaru:
+                                status = True
+                                break
+                        if status:
+                            print(f"Buku berjudul {judulBaru} sudah ada. Silakan periksa kembali.")
                             break
-                        elif validasi in ['no', 'n', 'tidak']:
-                            print('Perubahan Data Batal Disimpan')
                         else:
-                            print('Input Tidak Sesuai')
+                            validasi = input('Apakah Yakin Untuk Menyimpan Data Baru? (Y/N): ').lower()
+                            if validasi in ['yes', 'y', 'ya']:
+                                buku[2] = judulBaru
+                                print('Perubahan Data Berhasil Disimpan')
+                                tampilkanBuku(daftarBuku)
+                                break
+                            elif validasi in ['no', 'n', 'tidak']:
+                                print('Perubahan Data Batal Disimpan')
+                            else:
+                                print('Input Tidak Sesuai')
 
                     elif pilihan == 2:
-                        pengarangBaru = input('Masukkan Pengarang Buku baru: ')
+                        pengarangBaru = input('Masukkan Pengarang Buku baru: ').capitalize()
                         validasi = input('Apakah Yakin Untuk Menyimpan Data Baru? (Y/N): ').lower()
                         if validasi in ['yes', 'y', 'ya']:
                             buku[3] = pengarangBaru
@@ -203,7 +221,7 @@ def updateBuku():
                             print('Input Tidak Sesuai')
 
                     elif pilihan == 3:
-                        kategoriBaru = input('Masukkan Kategori Buku baru: ')
+                        kategoriBaru = input('Masukkan Kategori Buku baru: ').capitalize()
                         validasi = input('Apakah Yakin Untuk Menyimpan Data Baru? (Y/N): ').lower()
                         if validasi in ['yes', 'y', 'ya']:
                             buku[4] = kategoriBaru
@@ -241,11 +259,33 @@ def updateBuku():
                         else:
                             print('Input Tidak Sesuai')    
                     elif pilihan == 6:
+                        judulBaru = input('Masukkan Judul Buku baru: ').capitalize()
+                        if any(buku[2].lower() == judulBaru.lower() for buku in daftarBuku.values()):
+                            print(f"Buku berjudul {judulBaru} sudah ada. Silakan periksa kembali.")
+                            return
+                        pengarangBaru = input('Masukkan Pengarang Buku baru: ').capitalize()
+                        kategoriBaru = input('Masukkan Kategori Buku baru: ').capitalize()
+                        tahunBaru = validasiInt('Masukkan Tahun Terbit Buku baru: ', minval=0)
+                        jumlahBaru = validasiInt('Masukkan Jumlah Buku baru: ', minval=0)
+
+                        validasi = input('Apakah Yakin Untuk Menyimpan Data Baru? (Y/N): ').lower()
+                        if validasi in ['yes', 'y', 'ya']:
+                            buku[2], buku[3], buku[4], buku[5], buku[6] = judulBaru, pengarangBaru, kategoriBaru, tahunBaru, jumlahBaru
+                            print('Perubahan Data Berhasil Disimpan')
+                            tampilkanBuku(daftarBuku)
+                            break
+                        elif validasi in ['no', 'n', 'tidak']:
+                            print('Perubahan Data Dibatalkan')
+                        else:
+                            print('Input Tidak Sesuai')
+                    elif pilihan == 7:
                         break
                     else:
                         print("Pilihan tidak valid. Silakan coba lagi.")
+
                 elif validasi in ['no', 'n', 'tidak']:
                     print('Data Batal Diupdate')
+                    break
                 else: 
                     print('Inputan Anda Tidak Sesuai')
             return
@@ -257,7 +297,7 @@ def hapusBuku():
 
     for key, val in list(daftarBuku.items()):
         if idBuku == val[1]:
-            validasi = validasiStr('Apakah Anda Setuju Menghapus Buku? (Y/N): ').lower()
+            validasi = input('Apakah Anda Setuju Menghapus Buku? (Y/N): ').lower()
             if validasi in ['yes', 'y', 'ya']:
                 del daftarBuku[key]
                 print(f'Buku dengan ID {idBuku} berhasil dihapus.')
@@ -271,7 +311,6 @@ def hapusBuku():
     else:
         print(f'Buku dengan ID {idBuku} tidak ditemukan.')
 
-    # Re-index the remaining books
     for index, (key, val) in enumerate(daftarBuku.items(), start=1):
         val[0] = index
 
