@@ -13,7 +13,7 @@ List Menu:
 '''
     while True:
         print(listMenu)
-        option =mylib.validasiInt(title='Masukkan Menu Yang Akan Dipilih (1-6): ')
+        option =mylib.validasiInt(title='Masukkan Menu Yang Akan Dipilih (1-5): ')
         if option == 1:
             mylib.subMenuTampilkan()
         elif option == 2:
