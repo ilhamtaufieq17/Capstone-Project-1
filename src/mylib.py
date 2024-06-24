@@ -129,19 +129,13 @@ def tambahBuku():
         return
 
     judul = input('Masukkan Judul Buku: ').capitalize()
+    if any(buku[2] == judul for buku in daftarBuku.values()):
+        print(f"\nBuku berjudul {judul} sudah ada. Silakan periksa kembali.\n")
+        return
     pengarang = input('Masukkan Pengarang Buku: ').capitalize()
     kategori = input('Masukkan Kategori Buku: ').capitalize()
     tahunTerbit = validasiInt(title='Masukkan Tahun Terbit Buku: ', minval=0)
     jumlah = validasiInt(title='Masukkan Jumlah Buku: ', minval=0)
-
-    status = False
-    for buku in daftarBuku.values():
-        if buku[2] == judul:
-            status = True
-            break
-    if status:
-        print(f"Buku dengan judul {judul} sudah ada. Silakan periksa kembali.")
-        return
 
     while True:
         validasi = input('Apakah Anda Setuju Akan Menambahkan Buku? (Y/N): ').lower()
@@ -257,7 +251,7 @@ def updateBuku():
 
                     elif pilihan == 6:
                         judulBaru = input('Masukkan Judul Buku baru: ').capitalize()
-                        if any(buku[2].lower() == judulBaru.lower() for buku in daftarBuku.values()):
+                        if any(buku[2] == judulBaru for buku in daftarBuku.values()):
                             print(f"\nBuku berjudul {judulBaru} sudah ada. Silakan periksa kembali.\n")
                             return
                         pengarangBaru = input('Masukkan Pengarang Buku baru: ').capitalize()
