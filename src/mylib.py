@@ -5,7 +5,7 @@ daftarBuku = {
     'Boruto' : [2, 201, 'Boruto', 'Ukyo Kodachi & Masashi Kisimoto', 'Komik', 2016, 1],
     'FIFA Rules and Regulations' : [3, 301, 'FIFA Rules and Regulations', 'FIFA', 'Olahraga', 2023, 1],
     'Jujutsu Kaisen' : [4, 202, 'Jujutsu Kaisen', 'Gege Akutami', 'Komik', 2023, 1],
-    'Swan Song' : [5, 102, 'Swan Song', 'Elin Hilderbrand', 'Novel', 2024, 1],
+    
 }
 
 def validasiStr(title):
@@ -175,6 +175,7 @@ def updateBuku():
                             buku[2] = judulBaru
                             print('Perubahan Data Berhasil Disimpan')
                             tampilkanBuku(daftarBuku)
+                            break
                         elif validasi in ['no', 'n', 'tidak']:
                             print('Perubahan Data Batal Disimpan')
                         else:
@@ -187,6 +188,7 @@ def updateBuku():
                             buku[3] = pengarangBaru
                             print('Perubahan Data Berhasil Disimpan')
                             tampilkanBuku(daftarBuku)
+                            break
                         elif validasi in ['no', 'n', 'tidak']:
                             print('Perubahan Data Batal Disimpan')
                         else:
@@ -199,6 +201,7 @@ def updateBuku():
                             buku[4] = kategoriBaru
                             print('Perubahan Data Berhasil Disimpan')
                             tampilkanBuku(daftarBuku)
+                            break
                         elif validasi in ['no', 'n', 'tidak']:
                             print('Perubahan Data Batal Disimpan')
                         else:
@@ -211,6 +214,7 @@ def updateBuku():
                             buku[5] = tahunBaru
                             print('Perubahan Data Berhasil Disimpan')
                             tampilkanBuku(daftarBuku)
+                            break
                         elif validasi in ['no', 'n', 'tidak']:
                             print('Perubahan Data Batal Disimpan')
                         else:
@@ -223,6 +227,7 @@ def updateBuku():
                             buku[6] = jumlahBaru
                             print('Perubahan Data Berhasil Disimpan')
                             tampilkanBuku(daftarBuku)
+                            break
                         elif validasi in ['no', 'n', 'tidak']:
                             print('Perubahan Data Dibatalkan')
                         else:
@@ -242,21 +247,25 @@ def updateBuku():
 def hapusBuku():
     tampilkanBuku(daftarBuku)
     idBuku = validasiInt(title='Masukkan ID Buku: ')
-    # Hapus Buku
-    for key, val in daftarBuku.items():
+
+    for key, val in list(daftarBuku.items()):
         if idBuku == val[1]:
-            validasi = validasiStr('Apakah Anda Setuju Menambahkan Buku? (Y/N): ').lower()
+            validasi = validasiStr('Apakah Anda Setuju Menghapus Buku? (Y/N): ').lower()
             if validasi in ['yes', 'y', 'ya']:
                 del daftarBuku[key]
-                for index, (key, val) in enumerate(daftarBuku.items(), start=1):
-                    val[0] = index
-                    print(f'Buku dengan ID {idBuku} berhasil dihapus.')
-                    tampilkanBuku(daftarBuku)
+                print(f'Buku dengan ID {idBuku} berhasil dihapus.')
                 break
             elif validasi in ['no', 'n', 'tidak']:
-                print(f'Buku Batal Dihapus.')
+                print('Penghapusan Buku Dibatalkan.')
                 break
-            else: print('Inputan Anda Tidak Sesuai')
-        else:
-            print(f'Buku tidak ditemukan.')
-            break
+            else:
+                print('Inputan Anda Tidak Sesuai.')
+                break
+    else:
+        print(f'Buku dengan ID {idBuku} tidak ditemukan.')
+
+    # Re-index the remaining books
+    for index, (key, val) in enumerate(daftarBuku.items(), start=1):
+        val[0] = index
+
+    tampilkanBuku(daftarBuku)
