@@ -1,10 +1,11 @@
 from tabulate import tabulate
 
 daftarBuku = {
-    'Dilan 1990' : [1, 101, 'Dilan 1990', 'Pidi Baiq', 'Novel', 2014, 15],
-    'Boruto' : [2, 201, 'Boruto', 'Ukyo Kodachi & Masashi Kisimoto', 'Komik', 2016, 2],
+    'Dilan 1990' : [1, 101, 'Dilan 1990', 'Pidi Baiq', 'Novel', 2014, 1],
+    'Boruto' : [2, 201, 'Boruto', 'Ukyo Kodachi & Masashi Kisimoto', 'Komik', 2016, 1],
     'FIFA Rules and Regulations' : [3, 301, 'FIFA Rules and Regulations', 'FIFA', 'Olahraga', 2023, 1],
     'Jujutsu Kaisen' : [4, 202, 'Jujutsu Kaisen', 'Gege Akutami', 'Komik', 2023, 1],
+    'Swan Song' : [5, 102, 'Swan Song', 'Elin Hilderbrand', 'Novel', 2024, 1],
 }
 
 def validasiStr(title):
@@ -105,7 +106,7 @@ def subMenuUpdate():
             print('Input anda salah. Silahkan input ulang!')
 
 def tampilkanBuku(database ,header=['No', 'ID Buku', 'Judul', 'Pengarang', 'Kategori', 'Tahun Terbit', 'Jumlah']):
-    print(tabulate(database.values(), headers=header, tablefmt='grid'))
+    print(tabulate(database.values(), headers=header, tablefmt='grid', stralign='center', numalign='center'))
 
 def pencarianBukuId(idBuku):
     idBuku = validasiInt(title='Masukkan ID Buku Yang Ingin Dicari: ')
