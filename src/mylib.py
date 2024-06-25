@@ -2,9 +2,9 @@ from tabulate import tabulate
 
 daftarBuku = {
     'Dilan 1990' : [1, 101, 'Dilan 1990', 'Pidi Baiq', 'Novel', 2014, 10],
-    # 'Boruto' : [2, 201, 'Boruto', 'Ukyo Kodachi & Masashi Kisimoto', 'Komik', 2016, 9],
-    # 'The Game Rules' : [3, 301, 'The Game Rules', 'FIFA', 'Olahraga', 2023, 8],
-    # 'Jujutsu Kaisen' : [4, 202, 'Jujutsu Kaisen', 'Gege Akutami', 'Komik', 2023, 7],
+    'Boruto' : [2, 201, 'Boruto', 'Ukyo Kodachi & Masashi Kisimoto', 'Komik', 2016, 9],
+    'The Game Rules' : [3, 301, 'The Game Rules', 'FIFA', 'Olahraga', 2023, 8],
+    'Jujutsu Kaisen' : [4, 202, 'Jujutsu Kaisen', 'Gege Akutami', 'Komik', 2023, 7],
 }
 
 def validasiInt(title, minval=0, maxval=10000):
